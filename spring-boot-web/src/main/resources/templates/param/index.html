@@ -1,0 +1,24 @@
+<!DOCTYPE htmlS>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8"/>
+		<title th:text="${titulo}"></title>
+	</head>
+	<body>
+		<h1 th:text="${titulo}"></h1>
+		<ul>
+		<li>
+		<a th:href="@{/params/string(texto='Hola Jesus')}">/params/string?texto=Hola Jesus</a>
+		</li>
+		<li>
+		<a th:href="@{/params/string(texto='Buenos dias')}">/params/string?texto=Buenos dias</a>
+		</li>
+		<li>
+		<a th:href="@{/params/mix-params(saludo='Buenos dias', numero=7)}">/params/mix-params?saludo=Buenos dias&numero=7</a>
+		</li>
+		<li>
+		<a th:href="@{/params/mix-params-request(saludo='Buenos dias', numero=7)}">/params/mix-params-request?saludo=Buenos dias&numero=7</a>
+		</li>
+		</ul>
+	</body>
+</html>

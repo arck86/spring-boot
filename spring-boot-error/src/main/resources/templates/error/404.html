@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Ha ocurrido un error 404</title>
+	</head>
+	<body>
+		<h1>Donde vas cabestro, que has hecho a la aplicación .......... 404</h1>
+		<div th:text="${error}"></div>
+		<div th:text="${status}"></div>
+		<div th:text="${timestamp}"></div>
+		<hr>
+		<div th:text="${path}"></div>
+	</body>
+</html>

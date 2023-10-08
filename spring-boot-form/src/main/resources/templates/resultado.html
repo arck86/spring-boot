@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${titulo}"></title>
+<link th:href="@{/css/bootstrap-5.3.1.min.css}" rel="stylesheet">
+</head>
+<body>
+
+	<section th:replace="common/tiempo :: interceptor"></section>
+	
+	<h3 th:text="${titulo}"></h3>
+	<div class="container">
+		<a th:href="@{/form}" class="btn btn-primary">Volver</a>
+		<ul class="list-group my-3">
+			<li class="list-group-item active" th:text="${titulo}"></li>
+
+			<li class="list-group-item"
+				th:text="'Identificador: '+${usuario.identificador}"></li>
+
+			<li class="list-group-item" th:text="'Nombre: '+${usuario.nombre}"></li>
+
+			<li class="list-group-item"
+				th:text="'Apellidos: '+${usuario.apellido}"></li>
+
+			<li class="list-group-item" th:text="'Id: '+${usuario.name}"></li>
+
+			<li class="list-group-item" th:text="'Pais: '+${usuario.pais.nombre}"></li>
+
+			<li class="list-group-item"
+				th:text="'Contraseña: '+${usuario.password}"></li>
+
+			<li class="list-group-item" th:text="'Correo: '+${usuario.email}"></li>
+
+			<li class="list-group-item" th:text="'Correo: '+${usuario.cuenta}"></li>
+
+			<li class="list-group-item"
+				th:text="'Habilitado: '+${usuario.habilitar}"></li>
+
+			<li class="list-group-item" th:text="'Genero '+${usuario.genero}"></li>
+
+			<li class="list-group-item"
+				th:text="'Fecha Nacimiento: '+${#dates.format(usuario.fechaNacimiento,'dd-MM-yyyy')}"></li>
+
+			<li class="list-group-item" th:text="'Secreto: '+${usuario.secreto}"></li>
+		</ul>
+		<ul class="list-group my-3">
+			<li class="list-group-item active" th:text="'Roles'"></li>
+			<li class="list-group-item" th:each="role: ${usuario.roles}"
+				th:text="${role.id}+' - ' + ${role.nombre} +' - ' + ${role.rol}"></li>
+		</ul>
+	</div>
+</body>
+</html>
