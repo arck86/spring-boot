@@ -1,10 +1,11 @@
 package com.arck.springboot.app.auth.filter;
 
 import java.io.IOException;
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.crypto.SecretKey;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,8 +17,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,7 +29,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	
 	public static final long EXPIRATION_TIME = 900_000; // 15 mins
 	
-	public static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+	private SecretKey secretKey;
 
 	private AuthenticationManager authManager;
 	
@@ -58,33 +59,25 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
 
-		String username = ((User)authResult.getPrincipal()).getUsername();
-		String token = Jwts.builder().setSubject(username)
-	    .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-	    .signWith(SECRET_KEY).compact();
+		User user = ((User)authResult.getPrincipal());
+		secretKey = Jwts.SIG.HS512.key().build();
+		
+		String token = Jwts.builder()
+				.claim("firstName",user.getUsername())
+		    .expiration(new Date(System.currentTimeMillis()+900000))
+		    .signWith(secretKey)
+		    .compact();
 
 
 	    response.addHeader("Authorization", "Bearer "+token);
 	    Map<String, Object> body = new HashMap<String, Object>();
 	    body.put("token",token);
-	    body.put("user", ((User)authResult.getPrincipal()));
-	    body.put("mensaje","Buenas: "+username);
+	    body.put("user", user);
+	    body.put("mensaje","Buenas: "+user.getUsername());
 	    response.getWriter().write(new ObjectMapper().writeValueAsString(body));
 	    response.setStatus(200);
 		response.setContentType("application/json");
 	    
 	}
 
-	
-//	@Override
-//	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-//			Authentication authResult) throws IOException, ServletException {
-//
-//		String username = ((User)authResult.getPrincipal()).getUsername();
-//		String token = Jwts.builder().withSubject(username).signWith(SECRET_KEY).setExpiration(new Date(System.currentTimeMillis() + 3600000*4)).compact();;
-//
-//		
-//		response.addHeader("Authorization", "Bearer"+token);
-//		response.getWriter().flush();
-//	}
 }
