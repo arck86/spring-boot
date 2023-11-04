@@ -14,10 +14,10 @@ docker run -d -p 33062:3306 --name mysql-db -e MYSQL_ROOT_PASSWORD=secret -e MYS
 
 #Se crea imagen de docker
 ```sh
- docker build -t spring-boot-jwt:2 .
+ docker build -t spring-boot-jwt:1 .
 ```
 
 #Se despliega la aplicacion
 ```sh
- docker run -p 8080:8080 --net=mired spring-boot-jwt:2 .
+ docker run -p 8080:8080 --net=mired spring-boot-jwt:1 .
 ```
