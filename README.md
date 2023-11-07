@@ -9,7 +9,7 @@ docker network create mired
 
 #Desplegar base de datos
 ```sh
-docker run -d -p 33062:3306 --name mysql-db -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_DATABASE=db_springboot mysql:8.0
+docker run -d -p 33062:3306 --net=mired --name mysql-db -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_DATABASE=db_springboot mysql:8.0
 ```
 
 #Se crea imagen de docker
