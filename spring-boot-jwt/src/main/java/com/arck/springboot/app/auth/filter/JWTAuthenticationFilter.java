@@ -1,26 +1,21 @@
 package com.arck.springboot.app.auth.filter;
 
 import java.io.IOException;
-import java.security.Key;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.arck.springboot.app.auth.service.JWTService;
 import com.arck.springboot.app.models.entity.Usuario;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,12 +26,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	public static final long EXPIRATION_TIME = 900_000; // 30 mins
 	private final String SECRET = "my%Secret%Key%Spring-Boot.JWT.123456789,validation";
 
-	private Key SECRET_KEY = null;
-
 	private AuthenticationManager authManager;
 	
-	public JWTAuthenticationFilter(AuthenticationManager authManager) {
+	private JWTService jwtService;
+	
+	public JWTAuthenticationFilter(AuthenticationManager authManager, JWTService jwtService) {
 		this.authManager = authManager;
+		this.jwtService = jwtService;
 		setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/login","POST"));
 	}
 
@@ -76,23 +72,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
 
-		Key SECRET_KEY = Keys.hmacShaKeyFor(SECRET.getBytes());
-		
-		User user = ((User)authResult.getPrincipal());
-		
-		String token = Jwts.builder()
-				.claim("sub",user.getUsername())
-				.claim("authorities", new ObjectMapper().writeValueAsString(user.getAuthorities()))
-		    .expiration(new Date(System.currentTimeMillis()+1800000))
-		    .signWith(SECRET_KEY)
-		    .compact();
-
+		String token = jwtService.create(authResult);
 
 	    response.addHeader("Authorization", "Bearer "+token);
 	    Map<String, Object> body = new HashMap<String, Object>();
 	    body.put("token",token);
-	    body.put("user", user);
-	    body.put("mensaje","Buenas: "+user.getUsername());
+	    body.put("user", authResult.getPrincipal());
+	    body.put("mensaje","Buenas: "+ authResult.getName());
 	    response.getWriter().write(new ObjectMapper().writeValueAsString(body));
 	    response.setStatus(200);
 		response.setContentType("application/json");

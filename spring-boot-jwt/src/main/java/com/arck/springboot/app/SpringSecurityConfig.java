@@ -14,20 +14,24 @@ import org.springframework.security.web.SecurityFilterChain;
 import com.arck.springboot.app.auth.filter.JWTAuthenticationFilter;
 import com.arck.springboot.app.auth.filter.JWTAuthorizationFilter;
 import com.arck.springboot.app.auth.handler.LoginSuccessHandler;
+import com.arck.springboot.app.auth.service.JWTService;
 import com.arck.springboot.app.service.JpaUserDetailsService;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SpringSecurityConfig{
 	
-	@Autowired
-	private LoginSuccessHandler loginSuccessHandler;
+//	@Autowired
+//	private LoginSuccessHandler loginSuccessHandler;
 	
 	 @Autowired
      private BCryptPasswordEncoder passwordEncoder;
 		
 	@Autowired
 	private JpaUserDetailsService userDetailService;
+	
+	@Autowired
+	private JWTService jwtService;
 	
 	@Autowired
 	private AuthenticationConfiguration authenticationConfiguration;
@@ -48,7 +52,7 @@ public class SpringSecurityConfig{
 //		.exceptionHandling(exception -> exception.accessDeniedPage("/error_403"))
 		.csrf(csrf ->csrf.disable())
 		.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-		.addFilter(new JWTAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))	
+		.addFilter(new JWTAuthenticationFilter(authenticationConfiguration.getAuthenticationManager(),jwtService))	
 		.addFilter(new JWTAuthorizationFilter(authenticationConfiguration.getAuthenticationManager()))	;
 
 		  return http.build();

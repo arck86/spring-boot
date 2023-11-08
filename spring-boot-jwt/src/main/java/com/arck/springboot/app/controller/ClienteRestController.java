@@ -1,6 +1,7 @@
 package com.arck.springboot.app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +18,7 @@ public class ClienteRestController {
 	ClienteService clienteService;
 
 	@GetMapping("/listar")
+	@Secured("ROLE_ADMIN")
 	public  @ResponseBody ClienteList listarRest() {
 		
 		return new ClienteList(clienteService.findAll());
