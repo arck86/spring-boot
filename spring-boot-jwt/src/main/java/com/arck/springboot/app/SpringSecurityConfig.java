@@ -53,7 +53,7 @@ public class SpringSecurityConfig{
 		.csrf(csrf ->csrf.disable())
 		.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 		.addFilter(new JWTAuthenticationFilter(authenticationConfiguration.getAuthenticationManager(),jwtService))	
-		.addFilter(new JWTAuthorizationFilter(authenticationConfiguration.getAuthenticationManager()))	;
+		.addFilter(new JWTAuthorizationFilter(authenticationConfiguration.getAuthenticationManager(),jwtService))	;
 
 		  return http.build();
 	}

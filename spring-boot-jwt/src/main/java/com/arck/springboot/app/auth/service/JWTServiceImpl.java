@@ -24,7 +24,6 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JWTServiceImpl implements JWTService {
 	
-	private final String HEADER = "Authorization";
 	private final String PREFIX = "Bearer ";
 	private final String SECRET = "my%Secret%Key%Spring-Boot.JWT.123456789,validation";
 

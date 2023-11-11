@@ -1,8 +1,6 @@
 package com.arck.springboot.app.auth.filter;
 
 import java.io.IOException;
-import java.security.Key;
-import java.util.Arrays;
 import java.util.Collection;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,13 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.arck.springboot.app.auth.service.JWTService;
-import com.arck.springboot.app.sec.SimpleGrantedAuthorityExtra;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,13 +21,12 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter{
 	
 	private final String HEADER = "Authorization";
-	private final String PREFIX = "Bearer ";
-	private final String SECRET = "my%Secret%Key%Spring-Boot.JWT.123456789,validation";
 
 	private JWTService jwtService;
 	
-	public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
+	public JWTAuthorizationFilter(AuthenticationManager authenticationManager, JWTService jwtService) {
 		super(authenticationManager);
+		this.jwtService = jwtService;
 	}
 
 	@Override
