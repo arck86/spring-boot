@@ -47,6 +47,4 @@ export class FormComponent implements OnInit {
       Swal.fire('Cliente actualizado', `cliente ${cliente.nombre} actualizado con exito`, 'success')
     })
   }
-
-  borrar()
 }

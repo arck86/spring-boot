@@ -33,6 +33,6 @@ export class ClienteService {
   }
 
   delete(id: number): Observable<Cliente>{
-    return this.http.delete(`${this.url}/${id}`, cliente,{headers: this.httpHeader})
+    return this.http.delete<Cliente>(`${this.url}/${id}`,{headers: this.httpHeader})
   }
 }
