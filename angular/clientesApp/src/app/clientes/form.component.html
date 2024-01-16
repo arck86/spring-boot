@@ -26,7 +26,11 @@
 
       <div class="forma-group row mb-2">
         <div class="col-sm-6">
-          <button class="btn btn-primary" role="button">Create</button>
+          <button class="btn btn-primary" role="button" (click)="create()" *ngIf="!cliente.id else elseBlock">Create</button>
+          <ng-template #elseBlock>
+            <button class="btn btn-primary" role="button" (click)="update()">Update</button>
+
+          </ng-template>
         </div>
       </div>
     </form>

@@ -23,4 +23,16 @@ export class ClienteService {
     console.log("cliente service: "+cliente)
     return this.http.post<Cliente>(this.url,cliente,{headers: this.httpHeader});
   }
+
+  getCliente(id: number): Observable<Cliente>{
+    return this.http.get<Cliente>(`${this.url}/${id}`)
+  }
+
+  update(cliente: Cliente): Observable<Cliente>{
+    return this.http.put<Cliente>(`${this.url}/${cliente.id}`, cliente,{headers: this.httpHeader})
+  }
+
+  delete(id: number): Observable<Cliente>{
+    return this.http.delete(`${this.url}/${id}`, cliente,{headers: this.httpHeader})
+  }
 }
