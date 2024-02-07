@@ -22,9 +22,16 @@ export class ClienteService {
     );
   }
 
-  create(cliente: Cliente): Observable<any>{
+  create(cliente: Cliente): Observable<Cliente>{
     console.log("cliente service: "+cliente)
-    return this.http.post<any>(this.url,cliente,{headers: this.httpHeader});
+    return this.http.post(this.url,cliente,{headers: this.httpHeader}).pipe(
+      map((response: any)  => response.cliente as Cliente),
+      catchError(e => {
+        console.error(e.error.mensaje);
+        Swal.fire(e.error.mensaje, e.error.error, 'error');
+        return throwError(()=> new Error(e.error.mensaje));
+      })
+    );
   }
 
   getCliente(id: number): Observable<Cliente>{
