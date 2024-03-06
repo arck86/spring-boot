@@ -27,9 +27,13 @@ export class ClienteService {
     return this.http.post(this.url,cliente,{headers: this.httpHeader}).pipe(
       map((response: any)  => response.cliente as Cliente),
       catchError(e => {
+        if(e.status==400){
+          return throwError(() => e);
+        }
         console.error(e.error.mensaje);
         Swal.fire(e.error.mensaje, e.error.error, 'error');
-        return throwError(()=> new Error(e.error.mensaje));
+        return throwError(() => e);
+
       })
     );
   }
@@ -49,7 +53,7 @@ export class ClienteService {
       catchError(e => {
         console.error(e.error.mensaje);
         Swal.fire(e.error.mensaje, e.error.error, 'error');
-        return throwError(()=> new Error(e.error.mensaje));
+        return throwError(() => e);
       })
     );
   }
